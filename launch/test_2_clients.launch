@@ -1,0 +1,15 @@
+<launch>
+  <node name="rqt_console" pkg="rqt_console" type="rqt_console"/>
+
+  <node name="wready_server" pkg="wready" type="default_server.py"/>
+  
+  <node name="wready_client_1" pkg="wready" type="test_client.py">
+    <param name="name" value="Client 1"/>
+    <param name="server_ns" value="wready_server"/>
+  </node>
+  
+  <node name="wready_client_2" pkg="wready" type="test_client.py">
+    <param name="name" value="Client 2"/>
+    <param name="server_ns" value="wready_server"/>
+  </node>
+</launch>

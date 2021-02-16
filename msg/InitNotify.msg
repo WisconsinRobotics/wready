@@ -1,0 +1,1 @@
+int8 id # the ID of the init slot being notified
