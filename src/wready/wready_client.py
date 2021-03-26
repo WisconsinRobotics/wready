@@ -86,4 +86,5 @@ class WReadyClient:
             self._task_callback_cond.notify_all()
         self._cli_req.close()
         self._sub_notify.unregister()
+        self._pub_progress.unregister()
         self._pub_done.unregister()
