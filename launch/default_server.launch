@@ -1,0 +1,3 @@
+<launch>
+  <node name="wready" pkg="wready" type="default_server.py" output="screen"/>
+</launch>
