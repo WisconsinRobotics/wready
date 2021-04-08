@@ -7,8 +7,10 @@ This software is designed for ROS Noetic and Python 3.8.x.
 
 ## Protocol
 
+All inter-node communication is handled via services, as we want to avoid any persistent connections associated with publishers and subscribers.
+
 1. Client sends `wready/InitRequest` with client's notify topic to `(wready)/request`, WReady responds with newly-assigned init slot ID
 2. WReady schedules init slot for client
-3. WReady sends `std_msgs/InitNotify` with init slot ID to client's notify topic
+3. WReady sends `wready/InitNotify` with init slot ID to client's notify service
 4. Client completes initialization work, optionally sending `wready/InitProgress` to `(wready)/progress`
-5. Client sends `std_msgs/Empty` to `(wready)/done`
+5. Client sends `std_srvs/Empty` to `(wready)/done`

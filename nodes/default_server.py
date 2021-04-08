@@ -5,7 +5,7 @@ from typing import Optional
 import rospy
 
 from wready import InitTask, WReadyServer, WReadyServerObserver
-from wready.msg import InitProgress
+from wready.srv import InitProgressRequest
 
 def loginfo(log_msg: str):
     rospy.loginfo(f'WReady >> {log_msg}')
@@ -17,8 +17,8 @@ class RosOutObserver(WReadyServerObserver):
     def on_task_scheduled(self, task: InitTask):
         loginfo(f'Task scheduled: {task.name} ({task.slot_id})')
 
-    def on_task_progress(self, task: InitTask, msg: InitProgress):
-        loginfo(f'[{msg.completion * 100:.1f}%] {msg.message}')
+    def on_task_progress(self, task: InitTask, update: InitProgressRequest):
+        loginfo(f'[{update.completion * 100:.1f}%] {update.message}')
 
     def on_task_done(self, task: InitTask):
         loginfo(f'Task completed: {task.name} ({task.slot_id})')

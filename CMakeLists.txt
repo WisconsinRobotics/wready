@@ -4,6 +4,7 @@ project(wready)
 find_package(catkin REQUIRED COMPONENTS
     rospy
     std_msgs
+    std_srvs
     message_generation
 )
 
@@ -16,14 +17,14 @@ catkin_python_setup()
 # Generate messages in the 'msg' folder
 add_message_files(
   FILES
-  InitNotify.msg
-  InitProgress.msg
 )
 
 # Generate services in the 'srv' folder
 add_service_files(
   FILES
   InitRequest.srv
+  InitNotify.srv
+  InitProgress.srv
 )
 
 # Generate added messages and services with any dependencies listed here
