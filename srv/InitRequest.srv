@@ -1,4 +1,4 @@
 string name # a human-readable name for the init task
-string notify_cb # the esrvice where the client wants to be notified
+string notify_cb # the service where the client wants to be notified
 ---
 int8 id # the ID for the allocated init slot
