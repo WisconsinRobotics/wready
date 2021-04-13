@@ -4,8 +4,9 @@ from typing import Callable, ContextManager, Dict, Optional
 
 import rospy
 from std_srvs.srv import Empty
-
 from wready.srv import InitNotify, InitNotifyRequest, InitNotifyResponse, InitRequest, InitProgress
+
+from .sig_handler import SignalInterruptHandler
 
 class TaskContext(ABC):
     @abstractmethod
@@ -44,6 +45,7 @@ class WReadyClient:
         self._task_callbacks: Dict[int, Callable[[], None]] = dict()
         self._task_callback_lock = Lock()
         self._task_callback_cond = Condition(self._task_callback_lock)
+        self._sig_int_handler = SignalInterruptHandler(self.kill)
     
     def request_sync(self, task_name: str) -> ContextManager[TaskContext]:
         with self._task_callback_lock:
@@ -78,8 +80,9 @@ class WReadyClient:
         return InitNotifyResponse()
     
     def wait(self):
-        with self._task_callback_lock:
-            self._task_callback_cond.wait_for(lambda: len(self._task_callbacks) == 0)
+        with self._sig_int_handler:
+            with self._task_callback_lock:
+                self._task_callback_cond.wait_for(lambda: len(self._task_callbacks) == 0)
 
     def kill(self):
         with self._task_callback_lock: # free any blocked threads

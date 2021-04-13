@@ -5,10 +5,11 @@ from typing import Deque, Optional
 
 import rospy
 from std_srvs.srv import Empty, EmptyRequest, EmptyResponse
-
 from wready.srv import InitNotify, InitNotifyRequest,\
     InitProgress, InitProgressRequest, InitProgressResponse,\
     InitRequest, InitRequestRequest, InitRequestResponse
+
+from .sig_handler import SignalInterruptHandler
 
 class InitTask:
     def __init__(self, name: str, notify_service: str, slot_id: int):
@@ -41,6 +42,7 @@ class WReadyServer:
         self._task_lock = Lock()
         self._task_cond = Condition(self._task_lock)
         self.observer = observer
+        self._sig_int_handler = SignalInterruptHandler(self.kill)
     
     def _next_task_id(self) -> int:
         self._last_task_id += 1
@@ -82,8 +84,9 @@ class WReadyServer:
         notify_cli = rospy.ServiceProxy(task.notify_service, InitNotify)
         try:
             notify_cli(InitNotifyRequest(task.slot_id))
-            with self._task_lock:
-                self._task_cond.wait_for(lambda: self._current_task is None)
+            with self._sig_int_handler:
+                with self._task_lock:
+                    self._task_cond.wait_for(lambda: self._current_task is None)
         finally:
             notify_cli.close()
         return True
