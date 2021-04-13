@@ -6,7 +6,7 @@ from typing import Deque, Optional
 import rospy
 from std_srvs.srv import Empty, EmptyRequest, EmptyResponse
 
-from wready.srv import InitNotify, InitNotifyRequest, InitNotifyResponse,\
+from wready.srv import InitNotify, InitNotifyRequest,\
     InitProgress, InitProgressRequest, InitProgressResponse,\
     InitRequest, InitRequestRequest, InitRequestResponse
 
@@ -28,11 +28,6 @@ class WReadyServerObserver(ABC):
 
     def on_task_done(self, task: InitTask):
         pass
-
-class EphemeralSubscriberImpl(rospy.topics._SubscriberImpl):
-    def receive_callback(self, msgs, connection):
-
-        return super().receive_callback(msgs, connection)
 
 class WReadyServer:
     def __init__(self, server_ns: Optional[str] = None, observer: Optional[WReadyServerObserver] = None):
