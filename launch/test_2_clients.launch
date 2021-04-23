@@ -1,3 +1,4 @@
+<!-- Launches a test configuration with a default WReady server and two test clients. -->
 <launch>
   <node name="rqt_console" pkg="rqt_console" type="rqt_console"/>
 

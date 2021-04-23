@@ -8,9 +8,18 @@ from wready import InitTask, WReadyServer, WReadyServerObserver
 from wready.srv import InitProgressRequest
 
 def loginfo(log_msg: str):
+    """Writes a message to rosout prefixed with "WReady".
+
+    Parameters
+    ----------
+    log_msg : str
+        The message to log.
+    """
     rospy.loginfo(f'WReady >> {log_msg}')
 
 class RosOutObserver(WReadyServerObserver):
+    """A simple WReady server observer that logs events to rosout."""
+    
     def on_task_queued(self, task: InitTask):
         loginfo(f'Task queued: {task.name} ({task.slot_id})')
 
@@ -24,6 +33,22 @@ class RosOutObserver(WReadyServerObserver):
         loginfo(f'Task completed: {task.name} ({task.slot_id})')
 
 def main():
+    """A simple WReady server that logs events to rosout.
+
+    Various ROS params are accepted in the node's private namespace,
+    which are listed below.
+
+    Other Parameters
+    ----------------
+    server_ns : str, optional
+        The ROS namespace for the server. Defaults to the node's
+        private namespace.
+    task_delay : int, optional
+        The minimum delay between scheduled tasks, in milliseconds.
+        Defaults to 1 second.
+    enable_logging: bool, optional
+        Enables or disables rosout logging. Defaults to enabled.
+    """
     rospy.init_node('wready_server')
     
     server_ns: Optional[str] = rospy.get_param('~server_ns', None)

@@ -14,3 +14,18 @@ All inter-node communication is handled via services, as we want to avoid any pe
 3. WReady sends `wready/InitNotify` with init slot ID to client's notify service
 4. Client completes initialization work, optionally sending `wready/InitProgress` to `(wready)/progress`
 5. Client sends `std_srvs/Empty` to `(wready)/done`
+
+## Reference Implementation
+
+A reference implementation of a WReady server and WReady client are included in this package.
+These are given in the `wready.wready_client` and `wready.wready_server` modules.
+For more information, see the doc comments in the respective module files.
+
+Additionally, a full WReady server implementation exists in `nodes/default_server.py`, which is launched by `default_server.launch`.
+This implementation simply prints information about WReady tasks to rosout.
+For more information, see the doc comments in that file.
+
+## Other Notes
+
+The `nodes/done.py` node sends a `std_srvs/Empty` request to a topic as specified in its args.
+This is useful for manually completing a task that the original client failed to complete for whatever reason.
