@@ -99,9 +99,6 @@ class WReadyServer:
             An observer for this WReady server, if any.
         """
         namespace = '~' if server_ns is None else f'{server_ns}/'
-        self._srv_req = rospy.Service(f'{namespace}request', InitRequest, self._on_request_req)
-        self._srv_progress = rospy.Service(f'{namespace}progress', InitProgress, self._on_progress_req)
-        self._srv_done = rospy.Service(f'{namespace}done', Empty, self._on_done_req)
         
         self._last_task_id = -1
         self._req_queue: Deque[InitTask] = deque()
@@ -112,6 +109,10 @@ class WReadyServer:
         
         self.observer = observer
         self._sig_int_handler = SignalInterruptHandler(self.kill)
+
+        self._srv_req = rospy.Service(f'{namespace}request', InitRequest, self._on_request_req)
+        self._srv_progress = rospy.Service(f'{namespace}progress', InitProgress, self._on_progress_req)
+        self._srv_done = rospy.Service(f'{namespace}done', Empty, self._on_done_req)
     
     def _next_task_id(self) -> int:
         """Produces an unused task slot ID.

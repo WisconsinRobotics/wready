@@ -92,7 +92,6 @@ class WReadyClient:
         req_srv_name = f'{server_ns}/request'
         rospy.wait_for_service(req_srv_name)
         self._cli_req = rospy.ServiceProxy(req_srv_name, InitRequest)
-        self._srv_notify = rospy.Service(notify_service or '~wready_notify', InitNotify, self._on_notify_req)
         self._cli_progress = rospy.ServiceProxy(f'{server_ns}/progress', InitProgress, persistent=True)
         self._cli_done = rospy.ServiceProxy(f'{server_ns}/done', Empty)
         
@@ -102,6 +101,8 @@ class WReadyClient:
         self._task_callback_cond = Condition(self._task_callback_lock)
         
         self._sig_int_handler = SignalInterruptHandler(self.kill)
+
+        self._srv_notify = rospy.Service(notify_service or '~wready_notify', InitNotify, self._on_notify_req)
     
     def request_sync(self, task_name: str) -> ContextManager[TaskContext]:
         """Requests a task that is completed immediately on the current thread.
